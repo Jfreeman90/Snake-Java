@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 
 public class GameFrame extends JFrame {
 
@@ -10,6 +11,8 @@ public class GameFrame extends JFrame {
         this.setResizable((false));
         this.setVisible(true);
         //this.setLocationRelativeTo(null);
+        ImageIcon snakeLogo = new ImageIcon("download.jpg");
+        this.setIconImage(snakeLogo.getImage());
         this.pack();
     }
 }
