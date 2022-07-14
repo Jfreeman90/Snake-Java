@@ -13,7 +13,7 @@ public class GamePanel extends JPanel implements ActionListener {
     static final int SCREEN_HEIGHT=600;
     static final int UNIT_SIZE=25;      //size of each invisible grid.
     static final int GAME_UNITS=(SCREEN_WIDTH*SCREEN_HEIGHT)/UNIT_SIZE; //total size of array squares available
-    static final int DELAY =100;      //game speed (HIGHER = SLOWER)
+    int DELAY=100;      //game speed (HIGHER = SLOWER)
     int[] x = new int[GAME_UNITS];    //will hold the x-value of the snakes body
     int[] y = new int[GAME_UNITS];    //will hold the y-value of the snakes body
     int bodyParts=5;       //initial size of the snake
@@ -25,7 +25,7 @@ public class GamePanel extends JPanel implements ActionListener {
     Timer timer;            //timer started
     Random random;          //random object initialised
     boolean initLoad=true;  //will be true on initial load up and display start screen
-    int hiScore=0;        //A given highscore for each load up
+    int hiScore=0;          //A given hiscore for each load up - starts at 0 everytime
 
     //Constructor
     GamePanel(){
@@ -42,9 +42,10 @@ public class GamePanel extends JPanel implements ActionListener {
         newFood();
         //game is now running
         this.running=true;
-        this.timer = new Timer(DELAY, this);
+        this.timer = new Timer(this.DELAY, this);
         this.timer.start();
         this.initLoad=false;
+
     }
 
     public void paintComponent(Graphics g){
@@ -182,26 +183,23 @@ public class GamePanel extends JPanel implements ActionListener {
 
         //stop timer if collision detected and end game.
         if(!this.running){
-            timer.stop();
+            this.timer.stop();
         }
 
     }
 
     public void gameOver(Graphics g){
+        g.setColor(Color.RED);
+        g.setFont(new Font("Ink Free", Font.BOLD, 75));
+        FontMetrics metrics = getFontMetrics(g.getFont());
         //display game over information.
         if (this.foodEaten > this.hiScore) {
-            g.setColor(Color.RED);
-            g.setFont(new Font("Ink Free", Font.BOLD, 75));
-            FontMetrics metrics = getFontMetrics(g.getFont());
             g.drawString("GAME OVER", (SCREEN_WIDTH - metrics.stringWidth("GAME OVER")) / 2, SCREEN_HEIGHT / 2);
             g.setFont(new Font("Ink Free", Font.BOLD, 55));
             FontMetrics metrics2 = getFontMetrics(g.getFont());
             g.drawString("New HISCORE", (SCREEN_WIDTH - metrics2.stringWidth("New HISCORE"))/2, SCREEN_HEIGHT/2 + g.getFont().getSize());
             g.drawString("Score: " + this.foodEaten, (SCREEN_WIDTH - metrics2.stringWidth("Score: " + this.foodEaten))/2, SCREEN_HEIGHT/2 + 2*(g.getFont().getSize()));
         } else {
-            g.setColor(Color.RED);
-            g.setFont(new Font("Ink Free", Font.BOLD, 75));
-            FontMetrics metrics = getFontMetrics(g.getFont());
             g.drawString("GAME OVER", (SCREEN_WIDTH - metrics.stringWidth("GAME OVER")) / 2, SCREEN_HEIGHT / 2);
             g.setFont(new Font("Ink Free", Font.BOLD, 55));
             FontMetrics metrics2 = getFontMetrics(g.getFont());
@@ -218,8 +216,9 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void resetGame(){
-        System.out.println("Reset GAME");
+        //System.out.println("Reset GAME");
         //reset game variables
+        this.timer.stop();
         this.x = new int[GAME_UNITS];    //will hold the x-value of the snakes body
         this.y = new int[GAME_UNITS];    //will hold the y-value of the snakes body
         this.bodyParts=5;       //initial size of the snake
@@ -228,7 +227,8 @@ public class GamePanel extends JPanel implements ActionListener {
         }
 
         this.foodEaten=0;          //players score
-        this.direction = 'R';   //initial start the snake will move to the right
+        this.direction = 'R';   //initial start the snake will move to the right]
+        this.DELAY=100;
         this.running=false;     //game is running true or false
 
         startGame();
@@ -253,25 +253,25 @@ public class GamePanel extends JPanel implements ActionListener {
         @Override
         public void keyPressed(KeyEvent e){
             switch(e.getKeyCode()){
-                case KeyEvent.VK_LEFT:
+                case KeyEvent.VK_LEFT, KeyEvent.VK_A:
                     //to prevent 180 direction changes here check if they aren't already going right before changing.
                     if (direction != 'R'){
                         direction='L';
                     }
                     break;
-                case KeyEvent.VK_RIGHT:
+                case KeyEvent.VK_RIGHT, KeyEvent.VK_D:
                     //to prevent 180 direction changes here check if they aren't already going left before changing.
                     if (direction != 'L'){
                         direction='R';
                     }
                     break;
-                case KeyEvent.VK_UP:
+                case KeyEvent.VK_UP, KeyEvent.VK_W:
                     //to prevent 180 direction changes here check if they aren't already going down before changing.
                     if (direction != 'D'){
                         direction='U';
                     }
                     break;
-                case KeyEvent.VK_DOWN:
+                case KeyEvent.VK_DOWN, KeyEvent.VK_S:
                     //to prevent 180 direction changes here check if they aren't already going up before changing.
                     if (direction != 'U'){
                         direction='D';
