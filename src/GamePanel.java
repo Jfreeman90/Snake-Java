@@ -13,7 +13,7 @@ public class GamePanel extends JPanel implements ActionListener {
     static final int SCREEN_HEIGHT=600;
     static final int UNIT_SIZE=25;      //size of each invisible grid.
     static final int GAME_UNITS=(SCREEN_WIDTH*SCREEN_HEIGHT)/UNIT_SIZE; //total size of array squares available
-    static final int DELAY =125;     //game speed
+    static final int DELAY =100;      //game speed (HIGHER = SLOWER)
     int[] x = new int[GAME_UNITS];    //will hold the x-value of the snakes body
     int[] y = new int[GAME_UNITS];    //will hold the y-value of the snakes body
     int bodyParts=5;       //initial size of the snake
@@ -77,16 +77,23 @@ public class GamePanel extends JPanel implements ActionListener {
                 }
             }
 
-            //draw the current score
-            g.setColor(Color.WHITE);
-            g.setFont(new Font("Ink Free", Font.BOLD, 30));
-            FontMetrics metrics = getFontMetrics(g.getFont());
-            g.drawString("SCORE: "+this.foodEaten, (SCREEN_WIDTH - metrics.stringWidth( "SCORE: "+ this.foodEaten) ) /4, g.getFont().getSize());
-            g.drawString("HISCORE: "+this.hiScore, 3*(SCREEN_WIDTH - metrics.stringWidth( "HISCORE: "+ this.hiScore) ) /4, g.getFont().getSize());
+            //draw the current score, if game score beats current hiscore change to a new text.
+            if(this.foodEaten > this.hiScore){
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Ink Free", Font.BOLD, 30));
+                FontMetrics metrics = getFontMetrics(g.getFont());
+                g.drawString("HISCORE: " + this.hiScore, 3 * (SCREEN_WIDTH - metrics.stringWidth("HISCORE: " + this.hiScore)) / 4, g.getFont().getSize());
+                g.setColor(Color.GREEN);
+                g.drawString("SCORE: " + this.foodEaten, (SCREEN_WIDTH - metrics.stringWidth("SCORE: " + this.foodEaten)) / 4, g.getFont().getSize());
 
-            //draw the timer.
-
-
+            }
+            else {
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Ink Free", Font.BOLD, 30));
+                FontMetrics metrics = getFontMetrics(g.getFont());
+                g.drawString("SCORE: " + this.foodEaten, (SCREEN_WIDTH - metrics.stringWidth("SCORE: " + this.foodEaten)) / 4, g.getFont().getSize());
+                g.drawString("HISCORE: " + this.hiScore, 3 * (SCREEN_WIDTH - metrics.stringWidth("HISCORE: " + this.hiScore)) / 4, g.getFont().getSize());
+            }
 
         } else if (!this.running && this.initLoad) {
                 //load up screen
@@ -182,12 +189,24 @@ public class GamePanel extends JPanel implements ActionListener {
 
     public void gameOver(Graphics g){
         //display game over information.
-        g.setColor(Color.RED);
-        g.setFont(new Font("Ink Free", Font.BOLD, 75));
-        FontMetrics metrics = getFontMetrics(g.getFont());
-        g.drawString("GAME OVER", (SCREEN_WIDTH - metrics.stringWidth("GAME OVER"))/2, SCREEN_HEIGHT/2);
-        g.setFont(new Font("Ink Free", Font.BOLD, 60));
-        g.drawString("Score: "+this.foodEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+this.foodEaten))/2, SCREEN_HEIGHT/2+g.getFont().getSize());
+        if (this.foodEaten > this.hiScore) {
+            g.setColor(Color.RED);
+            g.setFont(new Font("Ink Free", Font.BOLD, 75));
+            FontMetrics metrics = getFontMetrics(g.getFont());
+            g.drawString("GAME OVER", (SCREEN_WIDTH - metrics.stringWidth("GAME OVER")) / 2, SCREEN_HEIGHT / 2);
+            g.setFont(new Font("Ink Free", Font.BOLD, 55));
+            FontMetrics metrics2 = getFontMetrics(g.getFont());
+            g.drawString("New HISCORE", (SCREEN_WIDTH - metrics2.stringWidth("New HISCORE"))/2, SCREEN_HEIGHT/2 + g.getFont().getSize());
+            g.drawString("Score: " + this.foodEaten, (SCREEN_WIDTH - metrics2.stringWidth("Score: " + this.foodEaten))/2, SCREEN_HEIGHT/2 + 2*(g.getFont().getSize()));
+        } else {
+            g.setColor(Color.RED);
+            g.setFont(new Font("Ink Free", Font.BOLD, 75));
+            FontMetrics metrics = getFontMetrics(g.getFont());
+            g.drawString("GAME OVER", (SCREEN_WIDTH - metrics.stringWidth("GAME OVER")) / 2, SCREEN_HEIGHT / 2);
+            g.setFont(new Font("Ink Free", Font.BOLD, 55));
+            FontMetrics metrics2 = getFontMetrics(g.getFont());
+            g.drawString("Score: " + this.foodEaten, (SCREEN_WIDTH - metrics2.stringWidth("Score: " + this.foodEaten)) / 2, SCREEN_HEIGHT / 2 + g.getFont().getSize());
+        }
     }
 
     public void startScreen(Graphics g){
