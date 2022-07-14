@@ -11,9 +11,9 @@ public class GamePanel extends JPanel implements ActionListener {
     //attributes
     static final int SCREEN_WIDTH = 600;
     static final int SCREEN_HEIGHT=600;
-    static final int UNIT_SIZE=25;      //size of each invisible grid.
+    static final int UNIT_SIZE=20;      //size of each invisible grid.
     static final int GAME_UNITS=(SCREEN_WIDTH*SCREEN_HEIGHT)/UNIT_SIZE; //total size of array squares available
-    int DELAY=100;      //game speed (HIGHER = SLOWER)
+    int DELAY=75;      //game speed (HIGHER = SLOWER)
     int[] x = new int[GAME_UNITS];    //will hold the x-value of the snakes body
     int[] y = new int[GAME_UNITS];    //will hold the y-value of the snakes body
     int bodyParts=5;       //initial size of the snake
@@ -234,6 +234,28 @@ public class GamePanel extends JPanel implements ActionListener {
         startGame();
     }
 
+    public void enterMemeMode(){
+        //change visuals for a meme mode.
+    }
+
+    public void increaseSnakeSpeed(){
+        if(this.DELAY>20) {
+            this.timer.stop();
+            this.DELAY -= 10;
+            this.timer = new Timer(this.DELAY, this);
+            this.timer.start();
+        }
+    }
+
+    public void decreaseSnakeSpeed(){
+        if(this.DELAY<300) {
+            this.timer.stop();
+            this.DELAY += 10;
+            this.timer = new Timer(this.DELAY, this);
+            this.timer.start();
+        }
+    }
+
     //main method that will contain the game loop.
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -283,6 +305,20 @@ public class GamePanel extends JPanel implements ActionListener {
                     } else {
                         resetGame();
                     }
+                    break;
+                case KeyEvent.VK_M:
+                    //enter meme mode
+                    break;
+                case KeyEvent.VK_P:
+                    //increase speed of snake
+                    //System.out.println("P pressed");
+                    increaseSnakeSpeed();
+                    break;
+                case KeyEvent.VK_L:
+                    //decrease speed of snake
+                    //System.out.println("L pressed");
+                    decreaseSnakeSpeed();
+                    break;
             }
 
         }
