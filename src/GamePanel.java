@@ -52,6 +52,9 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void draw(Graphics g){
+        //load images and draw instead of rectangles.
+
+
         //if running
         if (this.running){
             //draw game grid.
