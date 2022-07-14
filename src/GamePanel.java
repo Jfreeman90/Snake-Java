@@ -34,8 +34,6 @@ public class GamePanel extends JPanel implements ActionListener {
         this.setBackground(Color.BLACK);
         this.setFocusable(true);
         this.addKeyListener(new myKeyAdapter());
-        //startGame(); //change to starting on a space bar press
-
     }
 
     public void startGame(){
@@ -194,16 +192,16 @@ public class GamePanel extends JPanel implements ActionListener {
         FontMetrics metrics = getFontMetrics(g.getFont());
         //display game over information.
         if (this.foodEaten > this.hiScore) {
-            g.drawString("GAME OVER", (SCREEN_WIDTH - metrics.stringWidth("GAME OVER")) / 2, SCREEN_HEIGHT / 2);
+            g.drawString("GAME OVER", (SCREEN_WIDTH - metrics.stringWidth("GAME OVER")) / 2, SCREEN_HEIGHT/2-(g.getFont().getSize()));
             g.setFont(new Font("Ink Free", Font.BOLD, 55));
             FontMetrics metrics2 = getFontMetrics(g.getFont());
-            g.drawString("New HISCORE", (SCREEN_WIDTH - metrics2.stringWidth("New HISCORE"))/2, SCREEN_HEIGHT/2 + g.getFont().getSize());
-            g.drawString("Score: " + this.foodEaten, (SCREEN_WIDTH - metrics2.stringWidth("Score: " + this.foodEaten))/2, SCREEN_HEIGHT/2 + 2*(g.getFont().getSize()));
+            g.drawString("New HISCORE", (SCREEN_WIDTH - metrics2.stringWidth("New HISCORE"))/2, SCREEN_HEIGHT/2);
+            g.drawString("Score: " + this.foodEaten, (SCREEN_WIDTH - metrics2.stringWidth("Score: " + this.foodEaten))/2, SCREEN_HEIGHT/2 + (g.getFont().getSize()));
         } else {
-            g.drawString("GAME OVER", (SCREEN_WIDTH - metrics.stringWidth("GAME OVER")) / 2, SCREEN_HEIGHT / 2);
+            g.drawString("GAME OVER", (SCREEN_WIDTH - metrics.stringWidth("GAME OVER")) / 2, SCREEN_HEIGHT/2-(g.getFont().getSize()));
             g.setFont(new Font("Ink Free", Font.BOLD, 55));
             FontMetrics metrics2 = getFontMetrics(g.getFont());
-            g.drawString("Score: " + this.foodEaten, (SCREEN_WIDTH - metrics2.stringWidth("Score: " + this.foodEaten)) / 2, SCREEN_HEIGHT / 2 + g.getFont().getSize());
+            g.drawString("Score: " + this.foodEaten, (SCREEN_WIDTH - metrics2.stringWidth("Score: " + this.foodEaten)) / 2, SCREEN_HEIGHT /2 + g.getFont().getSize());
         }
     }
 
