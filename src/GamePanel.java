@@ -43,6 +43,10 @@ public class GamePanel extends JPanel implements ActionListener {
     BufferedImage  wallyHead = ImageIO.read(new File(path, "snakeHeadWally.PNG"));
     BufferedImage  wally = ImageIO.read(new File(path, "wally.png"));
     BufferedImage  wallyBackground = ImageIO.read(new File(path, "wallyBackGround.PNG"));
+    //startscreen and end game images
+    BufferedImage  startScreen = ImageIO.read(new File(path, "startscreen.png"));
+    BufferedImage  gameoverBackground = ImageIO.read(new File(path, "gameoverscreen.PNG"));
+
 
 
     //Constructor
@@ -243,6 +247,8 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void gameOver(Graphics g){
+        //game over background image
+        g.drawImage(this.gameoverBackground, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, null);
         g.setColor(Color.RED);
         g.setFont(new Font("Ink Free", Font.BOLD, 75));
         FontMetrics metrics = getFontMetrics(g.getFont());
@@ -253,20 +259,19 @@ public class GamePanel extends JPanel implements ActionListener {
             FontMetrics metrics2 = getFontMetrics(g.getFont());
             g.drawString("New HISCORE", (SCREEN_WIDTH - metrics2.stringWidth("New HISCORE"))/2, SCREEN_HEIGHT/2);
             g.drawString("Score: " + this.foodEaten, (SCREEN_WIDTH - metrics2.stringWidth("Score: " + this.foodEaten))/2, SCREEN_HEIGHT/2 + (g.getFont().getSize()));
+            g.drawString("Press space to restart", (SCREEN_WIDTH - metrics2.stringWidth("Press space to restart"))/2, SCREEN_HEIGHT-g.getFont().getSize());
         } else {
             g.drawString("GAME OVER", (SCREEN_WIDTH - metrics.stringWidth("GAME OVER")) / 2, SCREEN_HEIGHT/2-(g.getFont().getSize()));
             g.setFont(new Font("Ink Free", Font.BOLD, 55));
             FontMetrics metrics2 = getFontMetrics(g.getFont());
             g.drawString("Score: " + this.foodEaten, (SCREEN_WIDTH - metrics2.stringWidth("Score: " + this.foodEaten)) / 2, SCREEN_HEIGHT /2 + g.getFont().getSize());
+            g.drawString("Press space to restart", (SCREEN_WIDTH - metrics2.stringWidth("Press space to restart"))/2, SCREEN_HEIGHT-g.getFont().getSize());
         }
     }
 
     public void startScreen(Graphics g){
-        //display game over information.
-        g.setColor(Color.GREEN);
-        g.setFont(new Font("Ink Free", Font.BOLD, 40));
-        FontMetrics metrics = getFontMetrics(g.getFont());
-        g.drawString("Press SPACE to begin!", (SCREEN_WIDTH - metrics.stringWidth("Press SPACE to begin!"))/2, SCREEN_HEIGHT/2);
+        //display start screen
+        g.drawImage(this.startScreen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, null);
     }
 
     public void resetGame(){
