@@ -13,9 +13,9 @@ import java.awt.Color;
 
 public class GamePanel extends JPanel implements ActionListener {
     //attributes
-    static final int SCREEN_WIDTH = 600;
-    static final int SCREEN_HEIGHT=600;
-    static final int UNIT_SIZE=30;      //size of each invisible grid.
+    static final int SCREEN_WIDTH = 700;
+    static final int SCREEN_HEIGHT=700;
+    static final int UNIT_SIZE=35;      //size of each invisible grid.
     static final int GAME_UNITS=(SCREEN_WIDTH*SCREEN_HEIGHT)/UNIT_SIZE; //total size of array squares available
     int DELAY=75;      //game speed (HIGHER = SLOWER)
     int[] x = new int[GAME_UNITS];    //will hold the x-value of the snakes body
@@ -53,7 +53,7 @@ public class GamePanel extends JPanel implements ActionListener {
     GamePanel() throws IOException {
         random = new Random();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
-        this.setBackground(Color.BLACK);
+        this.setBackground(new Color(160, 200, 20));
         this.setFocusable(true);
         this.addKeyListener(new myKeyAdapter());
     }
@@ -74,34 +74,27 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void draw(Graphics g){
-        //load images and draw instead of rectangles.
-        //g.drawImage(this.snakeHead, 0,0, UNIT_SIZE, UNIT_SIZE, null);
-
         //if running
         if (this.running){
-            //draw game grid.
+            /*draw game grid.
             for (int i=0; i< SCREEN_HEIGHT/UNIT_SIZE; i++){
                 g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);
                 g.drawLine(0, i*UNIT_SIZE, SCREEN_WIDTH, i*UNIT_SIZE);
             }
+             */
+
             if (!this.memeMode && !this.hardMode) {
                 //draw the food
-                g.setColor(Color.YELLOW);
+                g.setColor(Color.darkGray);
                 g.fillOval(this.foodX, this.foodY, UNIT_SIZE / 2, UNIT_SIZE / 2);
 
                 //draw the snake
-                g.setColor(new Color(5, 230, 230));
+                g.setColor(Color.darkGray);
                 for (int i = 0; i < this.bodyParts; i++) {
                     if (i == 0) {//snake head
                         g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                     } else {
-                        if (i > 30) {
-                            g.setColor(new Color(50, 230 - i * 6, 230));
-                        } else {
-                            g.setColor(new Color(50 + i * 6, 230, 230));
-                        }
-
-                        g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                           g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                     }
                 }
             } else if (this.hardMode) {
@@ -138,16 +131,15 @@ public class GamePanel extends JPanel implements ActionListener {
 
             //draw the current score, if game score beats current hiscore change to a new text.
             if(this.foodEaten > this.hiScore){
-                g.setColor(Color.WHITE);
+                g.setColor(Color.BLACK);
                 g.setFont(new Font("Ink Free", Font.BOLD, 30));
                 FontMetrics metrics = getFontMetrics(g.getFont());
                 g.drawString("HISCORE: " + this.hiScore, 3 * (SCREEN_WIDTH - metrics.stringWidth("HISCORE: " + this.hiScore)) / 4, g.getFont().getSize());
-                g.setColor(Color.GREEN);
+                g.setColor(new Color(3, 45, 210));
                 g.drawString("SCORE: " + this.foodEaten, (SCREEN_WIDTH - metrics.stringWidth("SCORE: " + this.foodEaten)) / 4, g.getFont().getSize());
-
             }
             else {
-                g.setColor(Color.WHITE);
+                g.setColor(Color.BLACK);
                 g.setFont(new Font("Ink Free", Font.BOLD, 30));
                 FontMetrics metrics = getFontMetrics(g.getFont());
                 g.drawString("SCORE: " + this.foodEaten, (SCREEN_WIDTH - metrics.stringWidth("SCORE: " + this.foodEaten)) / 4, g.getFont().getSize());
