@@ -1,10 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class GameFrame extends JFrame {
 
     //Constructor
-    GameFrame(){
+    GameFrame() throws IOException {
         this.add(new GamePanel());
         this.setTitle("Snake - Java");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
