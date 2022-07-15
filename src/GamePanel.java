@@ -31,18 +31,18 @@ public class GamePanel extends JPanel implements ActionListener {
     boolean initLoad=true;  //will be true on initial load up and display start screen
     int hiScore=0;          //A given hiscore for each load up - starts at 0 everytime
     boolean memeMode=false; //activate or deactivate meme mode
-    boolean spaceMode=false; //Activate space mode
+    boolean hardMode=false; //Activate hard mode
     File path= new File("C:\\Users\\JackF\\OneDrive\\Documents\\PythonScripts\\TSI\\Java\\SnakeJava\\");
     //meme mode images loaded in
     BufferedImage  foodImage = ImageIO.read(new File(path, "borisHead.png"));
-    BufferedImage  snakeBody = ImageIO.read(new File(path, "snakeBody.jpg"));
+    BufferedImage  snakeBody = ImageIO.read(new File(path, "snakeBody2.PNG"));
     BufferedImage  snakeHead = ImageIO.read(new File(path, "shrekHead.jpg"));
     BufferedImage  backgroundCat = ImageIO.read(new File(path, "catBackground.jpg"));
     //space theme images loaded in.;
-    BufferedImage  snakeBodySpace = ImageIO.read(new File(path, "galaxy.jpg"));
-    BufferedImage  foodImageSpace = ImageIO.read(new File(path, "earth2.png"));
-    BufferedImage  backgroundSpace = ImageIO.read(new File(path, "spaceBackground.PNG"));
-    BufferedImage  snakeHeadSpace = ImageIO.read(new File(path, "ufo.PNG"));
+    BufferedImage  wallyBody = ImageIO.read(new File(path, "snakeBodyWally.PNG"));
+    BufferedImage  wallyHead = ImageIO.read(new File(path, "snakeHeadWally.PNG"));
+    BufferedImage  wally = ImageIO.read(new File(path, "wally.png"));
+    BufferedImage  wallyBackground = ImageIO.read(new File(path, "wallyBackGround.PNG"));
 
 
     //Constructor
@@ -80,7 +80,7 @@ public class GamePanel extends JPanel implements ActionListener {
                 g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);
                 g.drawLine(0, i*UNIT_SIZE, SCREEN_WIDTH, i*UNIT_SIZE);
             }
-            if (!this.memeMode && !this.spaceMode) {
+            if (!this.memeMode && !this.hardMode) {
                 //draw the food
                 g.setColor(Color.YELLOW);
                 g.fillOval(this.foodX, this.foodY, UNIT_SIZE / 2, UNIT_SIZE / 2);
@@ -100,19 +100,19 @@ public class GamePanel extends JPanel implements ActionListener {
                         g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                     }
                 }
-            } else if (this.spaceMode) {
+            } else if (this.hardMode) {
                 //space MODE
                 //draw out the same stuff but using the loaded meme images
-                g.drawImage(this.backgroundSpace, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, null);
+                g.drawImage(this.wallyBackground, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, null);
                 //draw the food
-                g.drawImage(this.foodImageSpace, this.foodX-UNIT_SIZE/4, this.foodY-UNIT_SIZE/4, UNIT_SIZE, UNIT_SIZE, null);
+                g.drawImage(this.wally, this.foodX- UNIT_SIZE/4, this.foodY- UNIT_SIZE/4, UNIT_SIZE+15, UNIT_SIZE+15, null);
 
                 //draw the snake
                 for (int i = 0; i < this.bodyParts; i++) {
                     if (i == 0) {//snake head
-                        g.drawImage(this.snakeHeadSpace, this.x[i], this.y[i], UNIT_SIZE+10, UNIT_SIZE+10, null);
+                        g.drawImage(this.wallyHead, this.x[i], this.y[i], UNIT_SIZE, UNIT_SIZE, null);
                     } else {
-                        g.drawImage(this.snakeBodySpace, this.x[i], this.y[i], UNIT_SIZE, UNIT_SIZE, null);
+                        g.drawImage(this.wallyBody, this.x[i], this.y[i], UNIT_SIZE, UNIT_SIZE, null);
                     }
                 }
             }
@@ -125,7 +125,7 @@ public class GamePanel extends JPanel implements ActionListener {
                 //draw the snake
                 for (int i = 0; i < this.bodyParts; i++) {
                     if (i == 0) {//snake head
-                        g.drawImage(this.snakeHead, this.x[i], this.y[i], UNIT_SIZE+10, UNIT_SIZE+10, null);
+                        g.drawImage(this.snakeHead, this.x[i]-5, this.y[i]-5, UNIT_SIZE+10, UNIT_SIZE+10, null);
                     } else {
                         g.drawImage(this.snakeBody, this.x[i], this.y[i], UNIT_SIZE, UNIT_SIZE, null);
                     }
@@ -294,15 +294,17 @@ public class GamePanel extends JPanel implements ActionListener {
             this.memeMode = true;
         } else {
             this.memeMode=false;
+            this.hardMode=false;
         }
     }
 
-    public void enterSpaceMode(){
+    public void enterHardMode(){
         //change visuals for a meme mode.
-        if (!this.spaceMode) {
-            this.spaceMode = true;
+        if (!this.hardMode) {
+            this.hardMode = true;
         } else {
-            this.spaceMode=false;
+            this.hardMode=false;
+            this.memeMode=false;
         }
     }
 
@@ -378,8 +380,8 @@ public class GamePanel extends JPanel implements ActionListener {
                     //enter meme mode
                     enterMemeMode();
                     break;
-                case KeyEvent.VK_C:
-                    enterSpaceMode();
+                case KeyEvent.VK_H:
+                    enterHardMode();
                     break;
 
                 case KeyEvent.VK_P:
@@ -397,3 +399,4 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 }
+
