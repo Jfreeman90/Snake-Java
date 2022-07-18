@@ -17,7 +17,7 @@ public class GamePanel extends JPanel implements ActionListener {
     static final int SCREEN_HEIGHT=700;
     static final int UNIT_SIZE=35;      //size of each invisible grid.
     static final int GAME_UNITS=(SCREEN_WIDTH*SCREEN_HEIGHT)/UNIT_SIZE; //total size of array squares available
-    int DELAY=200;      //game speed (HIGHER = SLOWER)
+    int DELAY=100;      //game speed (HIGHER = SLOWER)
     int[] x = new int[GAME_UNITS];    //will hold the x-value of the snakes body
     int[] y = new int[GAME_UNITS];    //will hold the y-value of the snakes body
     int bodyParts=5;       //initial size of the snake
@@ -286,26 +286,56 @@ public class GamePanel extends JPanel implements ActionListener {
             if (xRelativeLocation==0) {
                 if (yRelativeLocation==1){
                     //if food is in the same row and is below the snake head
-                    this.direction='D';
+                    if (this.direction=='U'){
+                        //don't allow a 180 turn and change to right or left first
+                        this.direction='R';
+                    } else {
+                        this.direction = 'D';
+                    }
                 } else {
                     //if food is in the same row and is above the snake head
-                    this.direction='U';
+                    if (this.direction=='D'){
+                        //don't allow a 180 turn and change to right or left first
+                        this.direction='R';
+                    } else {
+                        this.direction = 'U';
+                    }
                 }
             } else {
                 if (xRelativeLocation==1){
                     //if food is in the same column as the snake head and to the right
-                    this.direction='R';
+                    if (this.direction=='L'){
+                        //don't allow a 180 turn and change to right or left first
+                        this.direction='U';
+                    } else {
+                        this.direction = 'R';
+                    }
                 } else {
                     //if food is in the same column as the snake head and to the left
-                    this.direction='L';
+                    if (this.direction=='R'){
+                        //don't allow a 180 turn and change to right or left first
+                        this.direction='D';
+                    } else {
+                        this.direction = 'L';
+                    }
                 }
             }
         } else if (xRelativeLocation==1){
             //if food is to the right of the snake head move right
-            this.direction='R';
+            if (this.direction=='L'){
+                //don't allow a 180 turn and change to right or left first
+                this.direction='U';
+            } else {
+                this.direction = 'R';
+            }
         } else if (xRelativeLocation==-1){
             //if food is to the left of the snake head move right
-            this.direction='L';
+            if (this.direction=='R'){
+                //don't allow a 180 turn and change to right or left first
+                this.direction='D';
+            } else {
+                this.direction = 'L';
+            }
         }
 
         //check for collisions and if returns true change direction depending on current location to try to prevent collisions
@@ -346,8 +376,7 @@ public class GamePanel extends JPanel implements ActionListener {
                     break;
             }
         }
-
-         */
+        */
     }
 
     //method to move the snake on the screen. Draw the heads new position while drawing each of the other
