@@ -17,7 +17,7 @@ public class GamePanel extends JPanel implements ActionListener {
     static final int SCREEN_HEIGHT=700;
     static final int UNIT_SIZE=35;      //size of each invisible grid.
     static final int GAME_UNITS=(SCREEN_WIDTH*SCREEN_HEIGHT)/UNIT_SIZE; //total size of array squares available
-    int DELAY=100;      //game speed (HIGHER = SLOWER)
+    int DELAY=50;      //game speed (HIGHER = SLOWER)
     int[] x = new int[GAME_UNITS];    //will hold the x-value of the snakes body
     int[] y = new int[GAME_UNITS];    //will hold the y-value of the snakes body
     int bodyParts=5;       //initial size of the snake
@@ -224,36 +224,44 @@ public class GamePanel extends JPanel implements ActionListener {
 
     //function to check is next step will collide with the body given direction, snake head and snake body.
     //return true if there is a collision
-    private boolean checkCollideWithSelf(char currentDirection, int[] xSnakeLocations, int[] ySnakeLocations){
+    private boolean checkCollideWithSelf(char directionToMove, int[] xSnakeLocations, int[] ySnakeLocations){
         int xCurrentHead=snakeLocationToInteger(xSnakeLocations[0]);
         int yCurrentHead=snakeLocationToInteger(ySnakeLocations[0]);
         //check for the current direction if the next step forward will collide with the snake body
-        switch (currentDirection) {
+        switch (directionToMove) {
             case 'R':
                 for (int i = 1; i < this.bodyParts; i++) {
                     if (xCurrentHead + 1 == snakeLocationToInteger(x[i])) {
-                        return true;
+                        if (yCurrentHead==snakeLocationToInteger(y[i])){
+                            return true;
+                        }
                     }
                 }
                 break;
             case 'L':
                 for (int i = 1; i < this.bodyParts; i++) {
                     if (xCurrentHead - 1 == snakeLocationToInteger(x[i])) {
-                        return true;
+                        if (yCurrentHead==snakeLocationToInteger(y[i])){
+                            return true;
+                        }
                     }
                 }
                 break;
             case 'U':
                 for (int i = 1; i < this.bodyParts; i++) {
                     if (yCurrentHead - 1 == snakeLocationToInteger(y[i])) {
-                        return true;
+                        if (xCurrentHead==snakeLocationToInteger(x[i])){
+                            return true;
+                        }
                     }
                 }
                 break;
             case 'D':
                 for (int i = 1; i < this.bodyParts; i++) {
                     if (yCurrentHead + 1 == snakeLocationToInteger(y[i])) {
-                        return true;
+                        if (xCurrentHead==snakeLocationToInteger(x[i])){
+                            return true;
+                        }
                     }
                 }
                 break;
@@ -270,53 +278,130 @@ public class GamePanel extends JPanel implements ActionListener {
         System.out.println("----------------------------------");
 
         //find the relative location of the food in relation to the snakes current head location.
-
          */
+
         int xRelativeLocation=relativeX(snakeLocationToInteger(this.x[0]), foodLocationToInteger(this.foodX));
         int yRelativeLocation=relativeY(snakeLocationToInteger(this.y[0]), foodLocationToInteger(this.foodY));
         System.out.println("Current direction " + this.direction);
         System.out.println("X relative food location : " + xRelativeLocation);
         System.out.println("Y relative food location : " + yRelativeLocation);
         System.out.println("----------------------------------");
-
+        //System.out.println("Will current direction collide with own body next step in same direction " + checkCollideWithSelf(this.direction, this.x, this.y));
 
         //make decisions depending on the location of the food in relation to the snake head.
         //if the snake is currently in the right row or column only change the perpendicular direction
         if (xRelativeLocation==0 || yRelativeLocation==0) {
             if (xRelativeLocation==0) {
                 if (yRelativeLocation==1){
-                    //if food is in the same row and is below the snake head
+                    //if food is in the same row and is below the snake head - NEED TO GO DOWN
                     if (this.direction=='U'){
                         //don't allow a 180 turn and change to right or left first
-                        this.direction='R';
+                        System.out.println("CANT MOVE DOWN ALREADY TRAVELLING UP SO MOVE RIGHT");
+                        System.out.println("Will next direction change(RIGHT) - line 300 " + checkCollideWithSelf('R', this.x, this.y));
+                        if (checkCollideWithSelf('R', this.x, this.y)) {
+                            this.direction='L';
+                        } else {
+                            this.direction = 'R';
+                        }
                     } else {
-                        this.direction = 'D';
+                        System.out.println("Food in same col below snake head so move down");
+                        System.out.println("Will next direction change(DOWN) - line 308 " + checkCollideWithSelf('D', this.x, this.y));
+                        if (checkCollideWithSelf('D', this.x, this.y)){
+                            if (checkCollideWithSelf('R', this.x, this.y)) {
+                                this.direction='L';
+                            } else {
+                                this.direction = 'R';
+                            }
+                        }
+                        else {
+                            this.direction='D';
+                        }
                     }
                 } else {
-                    //if food is in the same row and is above the snake head
+                    //if food is in the same row and is above the snake head - NEED TO GO UP
                     if (this.direction=='D'){
                         //don't allow a 180 turn and change to right or left first
-                        this.direction='R';
+                        System.out.println("CANT MOVE UP ALREADY TRAVELLING DOWN SO MOVE RIGHT");
+                        System.out.println("Will next direction change(RIGHT) - line 325 " + checkCollideWithSelf('R', this.x, this.y));
+                        if (checkCollideWithSelf('R', this.x, this.y)) {
+                            this.direction='L';
+                        } else {
+                            this.direction = 'R';
+                        }
                     } else {
-                        this.direction = 'U';
+                        System.out.println("Food in same col above snake head so move up");
+                        System.out.println("Will next direction change(UP) - line 333 " + checkCollideWithSelf('U', this.x, this.y));
+                        if (checkCollideWithSelf('U', this.x, this.y)){
+                            if (checkCollideWithSelf('R', this.x, this.y)) {
+                                this.direction='L';
+                            } else {
+                                this.direction = 'R';
+                            }
+                        }
+                        else {
+                            this.direction='U';
+                        }
                     }
                 }
-            } else {
+            } else { //if yRelativelocation=0
                 if (xRelativeLocation==1){
-                    //if food is in the same column as the snake head and to the right
+                    //if food is in the same column as the snake head and to the right - NEED TO GO RIGHT
                     if (this.direction=='L'){
                         //don't allow a 180 turn and change to right or left first
-                        this.direction='U';
+                        System.out.println("CANT MOVE RIGHT ALREADY TRAVELLING LEFT SO MOVE UP");
+                        System.out.println("Will next direction change(UP) - line 352 " + checkCollideWithSelf('U', this.x, this.y));
+                        if (checkCollideWithSelf('U', this.x, this.y)) {
+                            this.direction='D';
+                        } else {
+                            if (checkCollideWithSelf('U', this.x, this.y)){
+                                this.direction='L';
+                            } else {
+                                this.direction = 'U';
+                            }
+                        }
                     } else {
+                        System.out.println("Food in same row right of the snake head so move right");
+                        System.out.println("Will next direction change(RIGHT) - line 364 " + checkCollideWithSelf('R', this.x, this.y));
                         this.direction = 'R';
+                        if (checkCollideWithSelf('R', this.x, this.y)){
+                            if (checkCollideWithSelf('U', this.x, this.y)) {
+                                this.direction='D';
+                            } else {
+                                this.direction = 'U';
+                            }
+                        }
+                        else {
+                            this.direction='R';
+                        }
                     }
                 } else {
-                    //if food is in the same column as the snake head and to the left
+                    //if food is in the same column as the snake head and to the left - NEED TO GO LEFT
                     if (this.direction=='R'){
                         //don't allow a 180 turn and change to right or left first
-                        this.direction='D';
+                        System.out.println("CANT MOVE LEFT ALREADY TRAVELLING RIGHT SO MOVE DOWN");
+                        System.out.println("Will next direction change(DOWN) - line 382 " + checkCollideWithSelf('D', this.x, this.y));
+                        if (checkCollideWithSelf('D', this.x, this.y)) {
+                            this.direction='U';
+                        } else {
+                            if (checkCollideWithSelf('D', this.x, this.y)){
+                                this.direction='R';
+                            } else {
+                                this.direction = 'D';
+                            }
+                        }
                     } else {
-                        this.direction = 'L';
+                        System.out.println("Food in same row left of the snake head so move left");
+                        System.out.println("Will next direction change(LEFT) - line 394 " + checkCollideWithSelf('L', this.x, this.y));
+                        if (checkCollideWithSelf('L', this.x, this.y)){
+                            if (checkCollideWithSelf('U', this.x, this.y)) {
+                                this.direction='D';
+                            } else {
+                                this.direction = 'U';
+                            }
+                        }
+                        else {
+                            this.direction='L';
+                        }
                     }
                 }
             }
@@ -324,59 +409,60 @@ public class GamePanel extends JPanel implements ActionListener {
             //if food is to the right of the snake head move right
             if (this.direction=='L'){
                 //don't allow a 180 turn and change to right or left first
-                this.direction='U';
+                System.out.println("CANT MOVE LEFT ALREADY TRAVELLING RIGHT SO MOVE UP");
+                System.out.println("Will next direction change(UP) - line 413 " + checkCollideWithSelf('U', this.x, this.y));
+                if (checkCollideWithSelf('U', this.x, this.y)){
+                    this.direction='D';
+                } else {
+                    if (checkCollideWithSelf('U', this.x, this.y)){
+                        this.direction='L';
+                    } else {
+                        this.direction = 'U';
+                    }
+                }
             } else {
-                this.direction = 'R';
+                System.out.println("Food is right of the snake head so move right");
+                System.out.println("Will next direction change(RIGHT) - line 421 " + checkCollideWithSelf('R', this.x, this.y));
+                if (checkCollideWithSelf('R', this.x, this.y)){
+                    if (checkCollideWithSelf('D', this.x, this.y)){
+                        this.direction='U';
+                    } else {
+                        this.direction = 'D';
+                    }
+                } else {
+                    this.direction = 'R';
+                }
             }
         } else if (xRelativeLocation==-1){
-            //if food is to the left of the snake head move right
+            //if food is to the left of the snake head move left
             if (this.direction=='R'){
                 //don't allow a 180 turn and change to right or left first
-                this.direction='D';
+                System.out.println("CANT MOVE RIGHT ALREADY TRAVELLING LEFT SO MOVE DOWN");
+                System.out.println("Will next direction change(DOWN) c- line 437 " + checkCollideWithSelf('D', this.x, this.y));
+                if (checkCollideWithSelf('D', this.x, this.y)){
+                    this.direction='U';
+                } else {
+                    if (checkCollideWithSelf('D', this.x, this.y)){
+                        this.direction='R';
+                    } else {
+                        this.direction = 'D';
+                    }
+                }
             } else {
-                this.direction = 'L';
+                System.out.println("Food is left of the snake head so move left");
+                System.out.println("Will next direction change(Left) - line 445 " + checkCollideWithSelf('L', this.x, this.y));
+                if (checkCollideWithSelf('L', this.x, this.y)){
+                    if (checkCollideWithSelf('D', this.x, this.y)){
+                        this.direction='U';
+                    } else {
+                        this.direction = 'D';
+                    }
+                } else {
+                    this.direction = 'L';
+                }
             }
         }
 
-        //check for collisions and if returns true change direction depending on current location to try to prevent collisions
-        /*
-        if (checkCollideWithSelf(this.direction, this.x, this.y)){
-            switch (this.direction){
-                case 'U':
-                    //going up will collide, and you can't go back on yourself so chose a right/left
-                    if(Math.random() >0.5){
-                        this.direction='R';
-                    } else {
-                        this.direction='L';
-                    }
-                    break;
-                case 'D':
-                    //going down will collide, and you can't go back on yourself so chose a right/left
-                    if(Math.random()>0.5){
-                        this.direction='L';
-                    } else {
-                        this.direction='D';
-                    }
-                    break;
-                case 'R':
-                    //going right will collide, and you can't go back on yourself so chose an up/down
-                    if(Math.random() >0.5){
-                        this.direction='U';
-                    } else {
-                        this.direction='D';
-                    }
-                    break;
-                case 'L':
-                    //going left will collide, and you can't go back on yourself so chose an up/down
-                    if(Math.random() >0.5){
-                        this.direction='D';
-                    } else {
-                        this.direction='U';
-                    }
-                    break;
-            }
-        }
-        */
     }
 
     //method to move the snake on the screen. Draw the heads new position while drawing each of the other
@@ -420,13 +506,13 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
-    //checks for snake collinding with edge of the screen as well as its own body
+    //checks for snake colliding with edge of the screen as well as its own body
     public void checkCollisions(){
         //check if head collides with the body
         for (int i=bodyParts; i>0; i--){
-            if (x[0]==x[i] && y[0]==y[i]){
+            if (x[0] == x[i] && y[0] == y[i]) {
                 //System.out.println("Collision detected");
-                this.running=false;
+                this.running = false;
             }
         }
 
